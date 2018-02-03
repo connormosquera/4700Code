@@ -16,9 +16,14 @@ Theta = rand(1, nElectrons)*2*pi;
 Vx = cos(Theta).*(Vth + sigmaMB*randn(1, nElectrons));
 Vy = sin(Theta).*(Vth + sigmaMB*randn(1, nElectrons));
 
-%figure(1)
-%histogram(sqrt(Vx.^2+Vy.^2), 20);
-%hold off
+% figure(1)
+% histogram(sqrt(Vx.^2+Vy.^2), 20);
+% hold on
+% xlabel('Binned velocities (m/s)');
+% ylabel('Frequency');
+% grid on
+% title('Histogram of velocities of 10000 electrons');
+% hold off
 
 avgV = sum(sqrt(Vx.^2+Vy.^2))/nElectrons
 

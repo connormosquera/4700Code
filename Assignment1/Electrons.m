@@ -92,3 +92,9 @@ pcolor(n');
 colorbar;
 hold off
 
+% figure(3)
+% hold on
+% m=hist3([0.5*C.kb*0.26*C.m_0*Vx'.^2,0.5*C.kb*0.26*C.m_0*Vy'.^2],[50 50]);
+% pcolor(m');
+% colorbar;
+% hold off

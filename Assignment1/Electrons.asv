@@ -92,3 +92,4 @@ pcolor(n');
 colorbar;
 hold off
 
+figure(3)

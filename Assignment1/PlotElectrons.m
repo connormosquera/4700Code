@@ -1,8 +1,8 @@
-function [ output_args ] = PlotElectrons(cc)
-global nElectrons T L W MarkerSize
+function [] = PlotElectrons(cc)
+global nElectrons nPlot T L W MarkerSize
 global x y Vx Vy
 
-plot(x, y, 'bo', 'markers',MarkerSize,'MarkerFaceColor', 'b');
+plot(x(1:nPlot), y(1:nPlot), 'bo', 'markers',MarkerSize,'MarkerFaceColor', 'b');
 %hold on
 axis([0 L 0 W]);
 %xlabel('X');

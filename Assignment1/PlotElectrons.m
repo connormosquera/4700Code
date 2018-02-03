@@ -1,8 +1,8 @@
-function [ output_args ] = PlotElectrons(cc)
-global nElectrons T L W MarkerSize
+function [ output_args ] = PlotElectrons()
+global nElectrons nPlot T L W
 global x y Vx Vy
 
-plot(x, y, 'bo', 'markers',MarkerSize,'MarkerFaceColor', 'b');
+plot(x(1:nPlot), y(1:nPlot),'bo','markers',1,'MarkerFaceColor','b');
 %hold on
 axis([0 L 0 W]);
 %xlabel('X');
@@ -10,13 +10,14 @@ axis([0 L 0 W]);
 %title('Electron Position');
 
 
-% color code
+color code
 
-% for i=1:nElectrons
-%     plot(x(i), y(i), 'o','markers', 1, 'Color', cc(i,:));
-% end
-% 
-% axis([-L/2 L/2 -W/2 W/2]);
+cc = jet(nPlot);
+for i=1:nPlot
+    plot(x(i), y(i), 'o','markers', 1, 'Color', cc(i,:));
+end
+
+axis([0 L 0 W]);
 
 
 end

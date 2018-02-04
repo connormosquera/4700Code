@@ -1,12 +1,6 @@
-clearvars
-clearvars -GLOBAL
-close all
-
-global nElectrons nPlot T L W 
-global x y Vx Vy C time Temp dt Vth sigmaMB
-
 C.m_0 = 9.10938215e-31;             % electron mass
 C.kb = 1.3806504e-23;               % Boltzmann constant
+
 
 nElectrons = 10000;
 nPlot = 20;
@@ -15,40 +9,59 @@ L = 200e-9;
 W = 100e-9;
 MarkerSize = 1;
 dt = 1e-15;
-TStop = 1e-12;
+TStop = 0.1e-12;
 Vth = sqrt(2*C.kb*T/(C.m_0*0.26));
 time = 0;
 Temp = T;
 taumn = 0.2e-12;
 sigmaMB = sqrt(C.kb*T/(C.m_0*0.26));
+cc = jet(nPlot);
 
 collisionT = zeros(200,nElectrons);
 collisionV = zeros(200,nElectrons);
 collisionIndex = ones(1,nElectrons);
 collisions = 0;
 
-InitElectrons;
 
-cc = jet(nElectrons);
 
-figure(1)
-hold all
-plot([0.8,0.8]*1e-7,[0,0.4]*1e-7, 'r-')
-plot([0.8,0.8]*1e-7,[0.6,1]*1e-7, 'r-')
-plot([1.2,1.2]*1e-7,[0,0.4]*1e-7, 'r-')
-plot([1.2,1.2]*1e-7,[0.6,1]*1e-7, 'r-')
-plot([0.8,1.2]*1e-7,[0,0]*1e-7, 'r-')
-plot([0.8,1.2]*1e-7,[0.4,0.4]*1e-7, 'r-')
-plot([0.8,1.2]*1e-7,[0.6,0.6]*1e-7, 'r-')
-plot([0.8,1.2]*1e-7,[1,1]*1e-7, 'r-')
+x = rand(1, nElectrons)*L; % assigning random initial particle positions
+y = rand(1, nElectrons)*W;
 
+Theta = rand(1, nElectrons)*2*pi;
+Vx = cos(Theta).*(Vth + sigmaMB*randn(1, nElectrons));
+Vy = sin(Theta).*(Vth + sigmaMB*randn(1, nElectrons));
+
+avgV = sum(sqrt(Vx.^2+Vy.^2))/nElectrons
+
+
+figure(2)
+hFig = figure(2);
+set(gcf,'PaperPositionMode','auto')
+set(hFig, 'Position', [0 0 xwidth ywidth])
 
 for i=0:dt:TStop
     time = i;
-    %PlotAll;
-    PlotElectrons(cc);
+
+    subplot(2,1,1);
+    hold on
+    for j=1:nPlot
+        plot(x(j), y(j), 'o','markers', 1, 'Color', cc(j,:));
+    end
     
-    TempCalc();
+    axis([0 L 0 W]);
+    
+    V2tot=Vx.*Vx+Vy.*Vy;
+    KE = mean(V2tot)*0.5*(C.m_0*0.26);
+    Temp = KE/C.kb;
+    
+    subplot(2,1,2);
+    plot(time,Temp, 'ro', 'markers',1,'MarkerFaceColor', 'b');
+    hold on
+    axis([0 TStop 350 550]);
+    xlabel('Time(s)');
+    ylabel('Temp (K)');
+    grid on
+    title('Temperature vs. Time');
     
     x = x - dt * Vx; % moving the particles in one time step
     y = y - dt * Vy;
@@ -67,7 +80,7 @@ for i=0:dt:TStop
          end
     end
     
-    for j=1:nElectrons
+    for j=1:nElectrons % collision, mfp, and mean time between collisions code
         if (1-exp(-dt/taumn)) > rand()
             collisions = collisions+1;
             collisionT(collisionIndex(j)+1,j) = time;
@@ -80,13 +93,18 @@ for i=0:dt:TStop
         end
     end
     
-    BlockBorders(); % uncomment for specular reflection
-    %BlockBordersDiffusive(); % uncomment for diffuse reflection
-    
-    pause(0.001)
+    pause(0.000001)
     
 end
 
+figure(3)
+histogram(sqrt(Vx.^2+Vy.^2), 20);
+hold on
+xlabel('Binned velocities (m/s)');
+ylabel('Frequency');
+grid on
+title('Histogram of velocities of 10000 electrons');
+hold off
 
 MFP=0;
 TBC=0;
@@ -102,44 +120,3 @@ end
 
 TBC = TBC/collisions
 MFP = MFP/collisions
-
-
-
-figure(2)
-hold on
-n=hist3([x',y'],[50 50]);
-pcolor(n');
-colorbar;
-title('Electron Density Map');
-hold off
-
-V5050 = zeros(50);
-
-for h=1:nElectrons
-    for i=1:50
-        for j=1:50
-            if x(h)>((i-1)/50*L) && x(h)<(i/50*L) && y(h)>((j-1)/50*W) && y(h)<(j/50*W)
-                V5050(i,j)=Vx(h)^2+Vy(h)^2;
-            end
-        end
-    end
-end
-
-for i=1:50
-    for j=1:50
-       if n(i,j)~=0
-          V5050(i,j) = V5050(i,j)/n(i,j);  
-       else
-          V5050(i,j) = 0; 
-       end
-    end
-end
-
-
-figure(3)
-hold on
-m=V5050.*0.5*0.26*C.m_0/C.kb;
-pcolor(m');
-colorbar;
-title('Temperature Map');
-hold off

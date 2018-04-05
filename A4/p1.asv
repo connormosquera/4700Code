@@ -84,8 +84,8 @@ figure (3)
 semilogx(omegavec,20*log10(v0vec))
 hold on
 grid on
-title('\fontsize{22}Frequency Sweep showing Gain (V0/V1) in dB')
-xlabel('\fontsize{18}Frequency (rads)')
+title('\fontsize{22}Frequency Sweep showing Gain in dB')
+xlabel('\fontsize{18}Omega')
 ylabel('\fontsize{18}Gain (dB)')
 
 %%% PERTURBATIONS %%%
@@ -108,5 +108,4 @@ histogram(real(20*log10(v0vec)),15)
 hold on
 grid on
 title('\fontsize{22}Capacitor Variations')
-xlabel('\fontsize{18}Gain (dB)')
 

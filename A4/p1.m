@@ -76,7 +76,7 @@ figure (2)
 loglog(omegavec,v0vec)
 hold on
 grid on
-title('\fontsize{22}V0 vs. Frequency')
+title('\fontsize{22}Frequency vs. V0')
 xlabel('\fontsize{18}Frequency (rads)')
 ylabel('\fontsize{18}V0 (V)')
 
@@ -84,7 +84,7 @@ figure (3)
 semilogx(omegavec,20*log10(v0vec))
 hold on
 grid on
-title('\fontsize{22}Frequency Sweep showing Gain (V0/V1) in dB')
+title('\fontsize{22}Frequency vs. Gain (V0/V1)')
 xlabel('\fontsize{18}Frequency (rads)')
 ylabel('\fontsize{18}Gain (dB)')
 
